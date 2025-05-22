@@ -1,0 +1,8 @@
+
+
+
+# Ignore all files with the .osm extension
+*.osm
+
+# Ignore all files larger than 10 MB (requires Git LFS or manual handling, as .gitignore can't filter by size)
+# You can use a pre-commit hook to prevent large files from being committed.
