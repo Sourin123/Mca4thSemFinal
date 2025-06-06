@@ -123,7 +123,7 @@ def cluster_and_plot_graph():
     nx.draw_networkx_edges(G, pos, alpha=0.5)
     nx.draw_networkx_labels(G, pos, font_color='black')
 
-    plt.title("Clustered Graph (Louvain Algorithm)")
+    # plt.title("Clustered Graph (Louvain Algorithm)")
     plt.axis('off')
     plt.show()
 
