@@ -97,7 +97,7 @@ def cluster_and_plot_graph():
     nx.draw_networkx_edges(G, pos, alpha=0.5)
     nx.draw_networkx_labels(G, pos, font_color='black')
 
-    plt.title("Clustered Graph (Louvain Algorithm)")
+    # plt.title("Clustered Graph (Louvain Algorithm)")
     plt.axis('off')
     plt.show()
 
@@ -111,7 +111,37 @@ if __name__ == "__main__":
     source = 5
     target = 18
     try:
-        shortest_path = find_shortest_path_with_clustering(G, source, target, cluster_map)
-        print(f"Shortest path from {source} to {target}: {shortest_path}")
+        # Path using clustering-based algorithm
+        cluster_path = find_shortest_path_with_clustering(G, source, target, cluster_map)
+        print(f"Clustering-based shortest path from {source} to {target}: {cluster_path}")
+
+        # Path using conventional Dijkstra's algorithm
+        dijkstra_path = nx.shortest_path(G, source=source, target=target, weight='weight')
+        print(f"Dijkstra's shortest path from {source} to {target}: {dijkstra_path}")
+
+        # Visualization
+        pos = nx.spring_layout(G, seed=42)
+        cluster_colors = ['red', 'green', 'blue', 'yellow']
+        node_colors = [cluster_colors[cluster_map[n] % len(cluster_colors)] for n in G.nodes()]
+
+        plt.figure(figsize=(10, 8))
+        # nx.draw_networkx_nodes(G, pos, node_color=node_colors, node_size=300)
+        nx.draw_networkx_edges(G, pos, alpha=0.3)
+        nx.draw_networkx_labels(G, pos, font_color='black')
+
+        # Draw clustering-based path in blue
+        path_edges = list(zip(cluster_path, cluster_path[1:]))
+        nx.draw_networkx_edges(G, pos, edgelist=path_edges, edge_color='blue', width=3, label='Clustering Path')
+
+        # Draw Dijkstra path in orange (if different)
+        if dijkstra_path != cluster_path:
+            dijkstra_edges = list(zip(dijkstra_path, dijkstra_path[1:]))
+            nx.draw_networkx_edges(G, pos, edgelist=dijkstra_edges, edge_color='orange', width=3, style='dashed', label="Dijkstra's Path")
+
+        plt.title("Routing Paths: Clustering vs Dijkstra's Algorithm")
+        plt.axis('off')
+        plt.legend(loc='lower left')
+        plt.show()
+
     except (nx.NetworkXNoPath, nx.NodeNotFound) as e:
         print(f"No path found or node missing: {e}")
